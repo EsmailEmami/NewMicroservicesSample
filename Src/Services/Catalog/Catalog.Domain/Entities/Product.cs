@@ -6,11 +6,12 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace Catalog.Domain.Entities;
 
 [BsonCollection("Products")]
-public class Product : Entity<ObjectId>
+public class Product : Entity<Guid>
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.String)]
-    public override ObjectId Id { get; set; }
+    public Product()
+    {
+        Id  = Guid.NewGuid();
+    }
 
     public string Name { get; private set; }
     public string Category { get; private set; }

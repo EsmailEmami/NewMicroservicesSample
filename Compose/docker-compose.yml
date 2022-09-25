@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    
+  catalog.mongodb:
+    image: mongo
+  
+  catalog.mssqldb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+  
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: Src/Services/Catalog/Catalog.Api/Dockerfile
+
+
+volumes:
+  mongo_data:

@@ -1,4 +1,5 @@
 ﻿using Application.MessageBrokers;
+using Application.MessageBrokers.Kafka;
 using Domain.Core.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

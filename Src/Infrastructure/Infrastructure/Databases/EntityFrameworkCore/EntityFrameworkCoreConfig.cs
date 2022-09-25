@@ -1,6 +1,5 @@
-﻿using System.CodeDom.Compiler;
+﻿using Application.Core;
 using Application.Core.Repositories.EfCore;
-using Microsoft.CSharp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,12 +13,8 @@ public static class EntityFrameworkCoreConfig
         services.AddDbContext<TContext>(options =>
            options.UseSqlServer(configuration.GetConnectionString("SqlConnectionString")));
 
-        using CSharpCodeProvider provider = new CSharpCodeProvider();
-        var compParms = new CompilerParameters
-        {
-            GenerateExecutable = false,
-            GenerateInMemory = true
-        };
+        services.AddScoped(typeof(IUnitOfWork), typeof(TContext));
+
         services.AddScoped(typeof(IEfCoreRepository<,>), implementationRepositoryByPrimaryKey);
         services.AddScoped(typeof(IEfCoreRepository<>), implementationRepositoryWithoutPrimaryKey);
 

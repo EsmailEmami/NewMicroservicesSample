@@ -17,10 +17,10 @@ public static class ServiceRegistration
 {
     public static IServiceCollection AddServiceRegistration(this IServiceCollection services, IConfiguration configuration, params Type[] types)
     {
-        services.AddConsul(configuration);
-        services.AddMessageBroker(configuration);
-        services.AddOutbox(configuration);
-        services.AddCore(types);
+        //services.AddConsul(configuration);
+        //services.AddMessageBroker(configuration);
+        //services.AddOutbox(configuration);
+        //services.AddCore(types);
 
         services.AddMongoDb(configuration);
         services.AddDbContext<CatalogDbContext>(configuration, typeof(CatalogMainRepository<,>), typeof(CatalogMainRepository<>));

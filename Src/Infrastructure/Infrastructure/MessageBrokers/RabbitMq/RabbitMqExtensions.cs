@@ -1,4 +1,5 @@
 ﻿using Application.MessageBrokers;
+using Application.MessageBrokers.RabbitMq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RawRabbit.DependencyInjection.ServiceCollection;

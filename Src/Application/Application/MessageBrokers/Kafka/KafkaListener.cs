@@ -1,12 +1,11 @@
 ﻿using Application.Events;
-using Application.MessageBrokers;
 using Confluent.Kafka;
 using Domain.Core.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace Infrastructure.MessageBrokers.Kafka;
+namespace Application.MessageBrokers.Kafka;
 
 public class KafkaListener : IEventListener
 {

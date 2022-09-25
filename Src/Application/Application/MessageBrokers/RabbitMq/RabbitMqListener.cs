@@ -1,12 +1,11 @@
 ﻿using Application.Events;
-using Application.MessageBrokers;
 using Domain.Core.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RawRabbit;
 using RawRabbit.Configuration.Exchange;
 
-namespace Infrastructure.MessageBrokers.RabbitMq;
+namespace Application.MessageBrokers.RabbitMq;
 
 public class RabbitMqListener : IEventListener
 {

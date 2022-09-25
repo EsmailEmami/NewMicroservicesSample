@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.Context;
 
-public class EfCoreMainDbContext<T> : DbContext, IUnitOfWork where T : EfCoreMainDbContext<T>
+public class EfCoreMainDbContext<T> : DbContext, IUnitOfWork where T : DbContext
 {
     public EfCoreMainDbContext(DbContextOptions<T> options) : base(options)
     {

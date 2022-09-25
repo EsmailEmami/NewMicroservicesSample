@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 
-namespace Infrastructure.MessageBrokers.Kafka;
+namespace Application.MessageBrokers.Kafka;
 
 public class KafkaOptions
 {

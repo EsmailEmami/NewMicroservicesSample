@@ -13,7 +13,7 @@ public class CatalogMainRepository<TEntity, TPrimaryKey> : EfCoreMainRepository<
     }
 }
 
-public class CatalogMainRepository<TEntity> : EfCoreMainRepository<CatalogDbContext, TEntity, int>
+public class CatalogMainRepository<TEntity> : CatalogMainRepository<TEntity, int>
     where TEntity : class, IEntity<int>
 {
     public CatalogMainRepository(IUnitOfWork dbContextProvider) : base((CatalogDbContext)dbContextProvider)

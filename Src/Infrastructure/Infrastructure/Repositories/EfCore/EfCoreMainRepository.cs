@@ -12,7 +12,7 @@ public class EfCoreMainRepository<TDbContext, TEntity, TPrimaryKey> : EfCoreRepo
     public virtual TDbContext Context { get; }
     public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
     public EfCoreMainRepository(TDbContext dbContextProvider) => Context = dbContextProvider;
-    public override IQueryable<TEntity> GetAll() => Table;
+    public override IQueryable<TEntity> GetAll() => Table.AsQueryable();
 
     public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
     {
@@ -136,28 +136,6 @@ public class EfCoreMainRepository<TDbContext, TEntity, TPrimaryKey> : EfCoreRepo
         {
             Table.Attach(entity);
         }
-    }
-
-    public DbContext GetDbContext() => Context;
-
-    public Task EnsureCollectionLoadedAsync<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
-        CancellationToken cancellationToken) where TProperty : class
-    {
-        var expression = collectionExpression.Body as MemberExpression;
-        if (expression == null)
-        {
-            throw new Exception($"Given {nameof(collectionExpression)} is not a {typeof(MemberExpression).FullName}");
-        }
-
-        return Context.Entry(entity)
-            .Collection(expression.Member.Name)
-            .LoadAsync(cancellationToken);
-    }
-
-    public Task EnsurePropertyLoadedAsync<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> propertyExpression,
-        CancellationToken cancellationToken) where TProperty : class
-    {
-        return Context.Entry(entity).Reference(propertyExpression).LoadAsync(cancellationToken);
     }
 }
 
