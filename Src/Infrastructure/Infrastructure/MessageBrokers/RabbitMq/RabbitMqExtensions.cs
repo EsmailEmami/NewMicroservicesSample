@@ -9,7 +9,7 @@ namespace Infrastructure.MessageBrokers.RabbitMq;
 
 public static class RabbitMqExtensions
 {
-    public static IServiceCollection AddRabbitMq(this IServiceCollection services, IConfiguration configuration, params Type[] types)
+    public static IServiceCollection AddRabbitMq(this IServiceCollection services, IConfiguration configuration)
     {
         var options = new RabbitMqOptions();
         configuration.GetSection(nameof(MessageBrokersOptions)).Bind(options);

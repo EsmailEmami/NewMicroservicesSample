@@ -22,8 +22,8 @@ public static class CoreExtensions
         services.AddScoped<ICommandBus, CommandBus>();
         services.AddScoped<IQueryBus, QueryBus>();
         services.AddScoped<IEventBus, EventBus>();
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddOptions();
+        //ervices.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
         return services;
     }
 

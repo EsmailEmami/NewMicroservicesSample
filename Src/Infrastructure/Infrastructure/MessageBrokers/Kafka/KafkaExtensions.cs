@@ -27,3 +27,12 @@ public static class KafkaExtensions
         return app;
     }
 }
+
+// request
+
+// rabbimmq
+// outbox
+
+// user 
+
+// consumer 

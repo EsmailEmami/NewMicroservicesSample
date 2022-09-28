@@ -10,7 +10,7 @@ namespace Infrastructure.MessageBrokers;
 
 public static class MessageBrokersExtensions
 {
-    public static IServiceCollection AddMessageBroker(this IServiceCollection services, IConfiguration configuration, params Type[] types)
+    public static IServiceCollection AddMessageBroker(this IServiceCollection services, IConfiguration configuration)
     {
         var options = new MessageBrokersOptions();
         configuration.GetSection(nameof(MessageBrokersOptions)).Bind(options);
@@ -18,7 +18,7 @@ public static class MessageBrokersExtensions
 
         return options.MessageBrokerType.ToLowerInvariant() switch
         {
-            "rabbitmq" => services.AddRabbitMq(configuration, types),
+            "rabbitmq" => services.AddRabbitMq(configuration),
             "kafka" => services.AddKafka(configuration),
             _ => throw new Exception($"Message broker type '{options.MessageBrokerType}' is not supported")
         };

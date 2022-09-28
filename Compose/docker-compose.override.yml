@@ -5,34 +5,94 @@ services:
     container_name: rabbitmq
     restart: always
     ports:
-        - "5672:5672"
-        - "15672:15672"
+      - "5672:5672"
+      - "15672:15672"
 
-  catalog.mongodb:
-    container_name: catalog.mongodb
+  consul:
+    hostname: consul
+    container_name: consul
+    restart: always
+    volumes:
+      - consul_data:/consul/config
+    ports:
+      - "8500:8500"
+
+  elasticsearch:
+    container_name: elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.type=single-node"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
+  kibana:
+    container_name: kibana
+    restart: always
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  mongoclient:
+    container_name: mongoclient
+    restart: always
+    ports:
+      - "3000:3000"
+
+  outboxdb:
+    container_name: outboxdb
     restart: always
     ports:
       - "27017:27017"
     volumes:
-      - mongo_data:/data/db
+      - outbox_mongo_data:/data/db
 
-  catalog.mssqldb:
-    container_name: catalog.mssqldb
+  catalog_mongodb:
+    container_name: catalog_mongodb
+    restart: always
+    ports:
+      - "27018:27017"
+    volumes:
+      - catalog_mongo_data:/data/db
+
+  catalog_mssqldb:
+    container_name: catalog_mssqldb
     restart: always
     environment:
-        SA_PASSWORD: "SwN12345678"
-        ACCEPT_EULA: "Y"
+      SA_PASSWORD: "SwN12345678"
+      ACCEPT_EULA: "Y"
     ports:
-        - "1433:1433"
+      - "1433:1433"
+
+  catalog_redisdb:
+    container_name: catalog_redisdb
+    restart: always    
+    ports:
+      - "6379:6379"
   
   catalog.api:
     container_name: catalog.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "MongoDbSettings:ConnectionString=mongodb://catalogdb:27017"
+      - "MongoDbSettings:ConnectionString=mongodb://catalog_mongodb:27018"
+      - "ConnectionStrings:SqlConnectionString=Server=catalog_mssqldb;Database=CatalogDb;User Id=sa;Password=SwN12345678"  
+      - "CacheSettings:ConnectionString=catalog_redisdb:6379"
+      - "OutboxOptions:ConnectionString=mongodb://outboxdb:27017"
+      - "ConsulOptions:ConsulAddress=http://consul:8500"
     depends_on:
-      - catalog.mongodb
-      - catalog.mssqldb
+      - catalog_mongodb
+      - catalog_mssqldb
+      - catalog_redisdb
+      - consul
+      - rabbitmq
+    links:
+      - catalog_mongodb
+      - catalog_mssqldb
+      - catalog_redisdb
+      - consul
       - rabbitmq
     ports:
       - "8000:80"

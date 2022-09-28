@@ -9,14 +9,17 @@ public static class RedisServiceConfig
     public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration)
     {
         ConfigurationOptions configurationOptions = new ConfigurationOptions();
-        //configuration.GetSection("CacheSettings:Options").Bind(configurationOptions);
-        //services.Configure<ConfigurationOptions>(configuration.GetSection("CacheSettings:Options"));
+        configuration.GetSection("CacheSettings:Options").Bind(configurationOptions);
+        services.Configure<ConfigurationOptions>(configuration.GetSection("CacheSettings:Options"));
 
-        //services.AddStackExchangeRedisCache(options =>
-        //{
-        //    options.Configuration = configuration.GetValue<string>("CacheSettings:ConnectionString");
-        //    options.ConfigurationOptions = configurationOptions;
-        //});
+        configuration.GetSection("CacheSettings:Options").Bind(configurationOptions);
+        services.Configure<ConfigurationOptions>(configuration.GetSection("CacheSettings:Options"));
+
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration.GetValue<string>("CacheSettings:ConnectionString");
+            options.ConfigurationOptions = configurationOptions;
+        });
         return services;
     }
 }

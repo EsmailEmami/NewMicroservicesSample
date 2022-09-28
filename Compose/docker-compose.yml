@@ -3,19 +3,39 @@ version: '3.4'
 services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    
-  catalog.mongodb:
+
+  consul:
+    image: consul
+
+  mongoclient:
+    image: mongoclient/mongoclient
+
+  elasticsearch:
+    image: elasticsearch:8.4.2
+
+  kibana:
+    image: kibana:8.4.2
+
+  catalog_mongodb:
     image: mongo
   
-  catalog.mssqldb:
+  outboxdb:
+    image: mongo
+  
+  catalog_mssqldb:
     image: mcr.microsoft.com/mssql/server:2019-latest
+  
+  catalog_redisdb:
+    image: redis:alpine
   
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalogapi
     build:
-      context: .
+      context: ../
       dockerfile: Src/Services/Catalog/Catalog.Api/Dockerfile
 
-
 volumes:
-  mongo_data:
+  catalog_mongo_data:
+  outbox_mongo_data:
+  consul_data:
+  elasticsearch_data:

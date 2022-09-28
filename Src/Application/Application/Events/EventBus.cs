@@ -16,8 +16,8 @@ public class EventBus : IEventBus
     public EventBus(IMediator mediator, IOutboxListener outboxListener, IEventListener eventListener)
     {
         _mediator = mediator ?? throw new Exception($"Missing dependency '{nameof(IMediator)}'");
-        _outboxListener = outboxListener;
-        _eventListener = eventListener;
+        _outboxListener = outboxListener ?? throw new Exception($"Missing dependency '{nameof(IOutboxListener)}'"); ;
+        _eventListener = eventListener ?? throw new Exception($"Missing dependency '{nameof(IEventListener)}'"); ;
     }
 
     public virtual async Task PublishLocal(params IEvent[] events)
@@ -55,15 +55,12 @@ public class EventBus : IEventBus
 
     private async Task SendToMessageBroker(IEvent @event)
     {
-        if (_outboxListener != null)
+        try
         {
             await _outboxListener.Commit(@event);
-        }
-        else if (_eventListener != null)
-        {
             await _eventListener.Publish(@event);
         }
-        else
+        catch (Exception e)
         {
             throw new ArgumentNullException("No event listener found");
         }

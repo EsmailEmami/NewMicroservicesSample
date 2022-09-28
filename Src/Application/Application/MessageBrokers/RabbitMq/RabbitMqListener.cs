@@ -33,16 +33,14 @@ public class RabbitMqListener : IEventListener
         _busClient.SubscribeAsync(
             (Func<IEvent, Task>)(async (msg) =>
             {
-                using (var scope = _serviceFactory.CreateScope())
-                {
-                    var eventBus = scope.ServiceProvider.GetService<IEventBus>();
-                    await eventBus.PublishLocal(msg);
-                }
+                using var scope = _serviceFactory.CreateScope();
+                var eventBus = scope.ServiceProvider.GetService<IEventBus>();
+                await eventBus.PublishLocal(msg);
             }),
             cfg => cfg.UseSubscribeConfiguration(
                 c => c
                 .OnDeclaredExchange(GetExchangeDeclaration(type))
-                .FromDeclaredQueue(q => q.WithName((_options.Queue.Name ?? AppDomain.CurrentDomain.FriendlyName).Trim().Trim('_') + "_" + type.Name)))
+                .FromDeclaredQueue(q => q.WithName((_options.Queue.Name).Trim().Trim('_') + "_" + type.Name)))
         );
     }
 

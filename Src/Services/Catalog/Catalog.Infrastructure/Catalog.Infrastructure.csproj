@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Context\" />
-    <Folder Include="Repositories\" />
+    <Folder Include="Configurations\UserConfiguration\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

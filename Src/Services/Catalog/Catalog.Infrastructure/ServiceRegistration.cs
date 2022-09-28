@@ -6,6 +6,7 @@ using Infrastructure.Consul;
 using Infrastructure.Core;
 using Infrastructure.Databases.EntityFrameworkCore;
 using Infrastructure.Databases.MongoDb;
+using Infrastructure.Databases.Redis;
 using Infrastructure.MessageBrokers;
 using Infrastructure.Outbox;
 using Microsoft.Extensions.Configuration;
@@ -17,13 +18,14 @@ public static class ServiceRegistration
 {
     public static IServiceCollection AddServiceRegistration(this IServiceCollection services, IConfiguration configuration, params Type[] types)
     {
-        //services.AddConsul(configuration);
-        //services.AddMessageBroker(configuration);
-        //services.AddOutbox(configuration);
-        //services.AddCore(types);
+        services.AddConsul(configuration); 
+        services.AddMessageBroker(configuration);
+        services.AddOutbox(configuration);
+        services.AddCore(types);
 
         services.AddMongoDb(configuration);
         services.AddDbContext<CatalogDbContext>(configuration, typeof(CatalogMainRepository<,>), typeof(CatalogMainRepository<>));
+        services.AddRedis(configuration);
 
         services.AddScoped<IProductService, ProductService>();
 

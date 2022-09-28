@@ -8,7 +8,7 @@ public static class MessageBrokersHelper
     {
         var name = type.FullName?.ToLower().Replace("+", ".");
 
-        if (type is IEvent)
+        if (type == typeof(IEvent))
         {
             name += "_event";
         }
