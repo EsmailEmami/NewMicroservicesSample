@@ -1,6 +1,5 @@
 ﻿using Catalog.Application.Services;
 using Catalog.Infrastructure.Context;
-using Catalog.Infrastructure.Repositories;
 using Catalog.Infrastructure.Services;
 using Infrastructure.Consul;
 using Infrastructure.Core;
@@ -18,13 +17,13 @@ public static class ServiceRegistration
 {
     public static IServiceCollection AddServiceRegistration(this IServiceCollection services, IConfiguration configuration, params Type[] types)
     {
-        services.AddConsul(configuration); 
+        services.AddConsul(configuration);
         services.AddMessageBroker(configuration);
         services.AddOutbox(configuration);
         services.AddCore(types);
 
         services.AddMongoDb(configuration);
-        services.AddDbContext<CatalogDbContext>(configuration, typeof(CatalogMainRepository<,>), typeof(CatalogMainRepository<>));
+        services.AddDbContext<CatalogDbContext>(configuration);
         services.AddRedis(configuration);
 
         services.AddScoped<IProductService, ProductService>();

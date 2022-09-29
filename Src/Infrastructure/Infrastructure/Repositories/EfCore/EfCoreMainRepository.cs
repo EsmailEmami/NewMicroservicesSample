@@ -1,17 +1,17 @@
 ﻿using Domain.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Application.Core;
 using Application.Core.Repositories.EfCore;
 
 namespace Infrastructure.Repositories.EfCore;
 
-public class EfCoreMainRepository<TDbContext, TEntity, TPrimaryKey> : EfCoreRepository<TEntity, TPrimaryKey>
+public class EfCoreMainRepository<TEntity, TPrimaryKey> : EfCoreRepository<TEntity, TPrimaryKey>
     where TEntity : class, IEntity<TPrimaryKey>
-    where TDbContext : DbContext
 {
-    public virtual TDbContext Context { get; }
+    public virtual DbContext Context { get; }
     public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
-    public EfCoreMainRepository(TDbContext dbContextProvider) => Context = dbContextProvider;
+    public EfCoreMainRepository(IUnitOfWork dbContextProvider) => Context = (DbContext)dbContextProvider;
     public override IQueryable<TEntity> GetAll() => Table.AsQueryable();
 
     public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
@@ -139,11 +139,10 @@ public class EfCoreMainRepository<TDbContext, TEntity, TPrimaryKey> : EfCoreRepo
     }
 }
 
-public class EfCoreMainRepository<TDbContext, TEntity> : EfCoreMainRepository<TDbContext, TEntity, int>
+public class EfCoreMainRepository<TEntity> : EfCoreMainRepository<TEntity, int>
     where TEntity : class, IEntity<int>
-    where TDbContext : DbContext
 {
-    public EfCoreMainRepository(TDbContext dbContextProvider) : base(dbContextProvider)
+    public EfCoreMainRepository(IUnitOfWork dbContextProvider) : base(dbContextProvider)
     {
     }
 }

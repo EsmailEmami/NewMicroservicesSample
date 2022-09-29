@@ -2,6 +2,7 @@
 using Application.Core;
 using Application.Core.Repositories.EfCore;
 using Domain.Core.Entities;
+using Infrastructure.Repositories.EfCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +14,7 @@ namespace Infrastructure.Databases.EntityFrameworkCore;
 
 public static class EntityFrameworkCoreConfig
 {
-    public static IServiceCollection AddDbContext<TContext>(this IServiceCollection services, IConfiguration configuration, Type implementationRepositoryByPrimaryKey, Type implementationRepositoryWithoutPrimaryKey) where TContext : DbContext
+    public static IServiceCollection AddDbContext<TContext>(this IServiceCollection services, IConfiguration configuration) where TContext : DbContext
     {
         services.AddDbContext<TContext>(options =>
            options.UseSqlServer(configuration.GetConnectionString("SqlConnectionString"), options =>
@@ -23,8 +24,8 @@ public static class EntityFrameworkCoreConfig
 
         services.AddScoped(typeof(IUnitOfWork), typeof(TContext));
 
-        services.AddScoped(typeof(IEfCoreRepository<,>), implementationRepositoryByPrimaryKey);
-        services.AddScoped(typeof(IEfCoreRepository<>), implementationRepositoryWithoutPrimaryKey);
+        services.AddScoped(typeof(IEfCoreRepository<,>), typeof(EfCoreMainRepository<,>));
+        services.AddScoped(typeof(IEfCoreRepository<>), typeof(EfCoreMainRepository<>));
 
         return services;
     }
