@@ -1,13 +1,13 @@
-﻿using Domain.Core.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using Application.Core;
 using Application.Core.Repositories.EfCore;
+using Domain.Core.Events.EfCore;
 
 namespace Infrastructure.Repositories.EfCore;
 
 public class EfCoreMainRepository<TEntity, TPrimaryKey> : EfCoreRepository<TEntity, TPrimaryKey>
-    where TEntity : class, IEntity<TPrimaryKey>
+    where TEntity : class, IEfCoreEntity<TPrimaryKey>
 {
     public virtual DbContext Context { get; }
     public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
@@ -33,9 +33,9 @@ public class EfCoreMainRepository<TEntity, TPrimaryKey> : EfCoreRepository<TEnti
 
     public override async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate) => await GetAll().SingleAsync(predicate);
 
-    public override Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id) => Task.FromResult(GetAll().FirstOrDefault(CreateEqualityExpressionForId(id)));
+    public override Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id) => Task.FromResult(GetAll().FirstOrDefault(CreateEqualityExpressionForId(id)))!;
 
-    public override Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => Task.FromResult(GetAll().FirstOrDefault(predicate));
+    public override Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => Task.FromResult(GetAll().FirstOrDefault(predicate))!;
 
     public override TEntity Insert(TEntity entity) => Table.Add(entity).Entity;
 
@@ -45,8 +45,7 @@ public class EfCoreMainRepository<TEntity, TPrimaryKey> : EfCoreRepository<TEnti
     {
         entity = Insert(entity);
 
-        if (entity.IsTransient())
-            Context.SaveChanges();
+        Context.SaveChanges();
 
         return entity.Id;
     }
@@ -55,34 +54,7 @@ public class EfCoreMainRepository<TEntity, TPrimaryKey> : EfCoreRepository<TEnti
     {
         entity = await InsertAsync(entity);
 
-        if (entity.IsTransient())
-        {
-            await Context.SaveChangesAsync();
-        }
-
-        return entity.Id;
-    }
-
-    public override TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
-    {
-        entity = InsertOrUpdate(entity);
-
-        if (entity.IsTransient())
-        {
-            Context.SaveChanges();
-        }
-
-        return entity.Id;
-    }
-
-    public override async Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
-    {
-        entity = await InsertOrUpdateAsync(entity);
-
-        if (entity.IsTransient())
-        {
-            await Context.SaveChangesAsync();
-        }
+        await Context.SaveChangesAsync();
 
         return entity.Id;
     }
@@ -109,15 +81,8 @@ public class EfCoreMainRepository<TEntity, TPrimaryKey> : EfCoreRepository<TEnti
 
     public override void Delete(TPrimaryKey id)
     {
-        var entity = Table.Local.FirstOrDefault(ent => EqualityComparer<TPrimaryKey>.Default.Equals(ent.Id, id));
-        if (entity == null)
-        {
-            entity = FirstOrDefault(id);
-            if (entity == null)
-            {
-                return;
-            }
-        }
+        var entity = Table.Local.FirstOrDefault(ent => EqualityComparer<TPrimaryKey>.Default.Equals(ent.Id, id)) ??
+                     FirstOrDefault(id);
 
         Delete(entity);
     }
@@ -140,7 +105,7 @@ public class EfCoreMainRepository<TEntity, TPrimaryKey> : EfCoreRepository<TEnti
 }
 
 public class EfCoreMainRepository<TEntity> : EfCoreMainRepository<TEntity, int>
-    where TEntity : class, IEntity<int>
+    where TEntity : class, IEfCoreEntity<int>
 {
     public EfCoreMainRepository(IUnitOfWork dbContextProvider) : base(dbContextProvider)
     {

@@ -4,8 +4,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-#Src/Services/Catalog/Catalog.Infrastructure/Catalog.Intrastructure.csproj,
-
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Src/Services/Catalog/Catalog.Api/Catalog.Api.csproj", "Src/Services/Catalog/Catalog.Api/"]
@@ -17,6 +15,7 @@ COPY ["Src/Application/Application.Core/Application.Core.csproj", "Src/Applicati
 COPY ["Src/Application/Application/Application.csproj", "Src/Application/Application/"]
 COPY ["Src/Domain/Domain.Core/Domain.Core.csproj", "Src/Domain/Domain.Core/"]
 COPY ["Src/Domain/Domain/Domain.csproj", "Src/Domain/Domain/"]
+COPY ["Src/BuildingBlocks/BuildingBlocks/BuildingBlocks.csproj", "Src/BuildingBlocks/BuildingBlocks/"]
 RUN dotnet restore "Src/Services/Catalog/Catalog.Api/Catalog.Api.csproj"
 COPY . .
 WORKDIR "/src/Src/Services/Catalog/Catalog.Api"

@@ -1,16 +1,14 @@
 ﻿using Domain.Attributes;
-using Domain.Core.Entities;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using Domain.Core.Events.Mongo;
 
 namespace Catalog.Domain.Entities;
 
 [BsonCollection("Products")]
-public class Product : Entity<Guid>
+public class Product : MongoEntity<Guid>
 {
     public Product()
     {
-        Id  = Guid.NewGuid();
+        Id = Guid.NewGuid();
     }
 
     public string Name { get; private set; }

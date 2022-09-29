@@ -1,8 +1,10 @@
 ﻿using Domain.Core.Entities;
+using Domain.Core.Events.EfCore;
+using Domain.Core.Events.Mongo;
 
 namespace Catalog.Domain.Entities;
 
-public sealed class User : Entity
+public sealed class User : MongoEntity
 {
     public string FirstName { get; private set; }
     public string LastName { get; private set; }

@@ -3,7 +3,7 @@ using Domain.Core.Entities;
 
 namespace Application.Core.Repositories;
 
-public interface IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
+public interface IRepository<TEntity, in TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
 {
     IQueryable<TEntity> GetAll();
     bool Exists(TPrimaryKey id);
@@ -25,13 +25,6 @@ public interface IRepository<TEntity, TPrimaryKey> where TEntity : class, IEntit
 
     TEntity Insert(TEntity entity);
     Task<TEntity> InsertAsync(TEntity entity);
-    TPrimaryKey InsertAndGetId(TEntity entity);
-    Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity);
-    TEntity InsertOrUpdate(TEntity entity);
-    Task<TEntity> InsertOrUpdateAsync(TEntity entity);
-    TPrimaryKey InsertOrUpdateAndGetId(TEntity entity);
-    Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity);
-
     TEntity Update(TEntity entity);
     Task<TEntity> UpdateAsync(TEntity entity);
     TEntity Update(TPrimaryKey id, Action<TEntity> updateAction);

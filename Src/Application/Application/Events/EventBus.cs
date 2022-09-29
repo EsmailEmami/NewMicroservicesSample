@@ -16,8 +16,8 @@ public class EventBus : IEventBus
     public EventBus(IMediator mediator, IOutboxListener outboxListener, IEventListener eventListener)
     {
         _mediator = mediator ?? throw new Exception($"Missing dependency '{nameof(IMediator)}'");
-        _outboxListener = outboxListener ?? throw new Exception($"Missing dependency '{nameof(IOutboxListener)}'"); ;
-        _eventListener = eventListener ?? throw new Exception($"Missing dependency '{nameof(IEventListener)}'"); ;
+        _outboxListener = outboxListener ?? throw new Exception($"Missing dependency '{nameof(IOutboxListener)}'");
+        _eventListener = eventListener ?? throw new Exception($"Missing dependency '{nameof(IEventListener)}'");
     }
 
     public virtual async Task PublishLocal(params IEvent[] events)

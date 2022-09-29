@@ -1,9 +1,8 @@
 using Application.Filters;
-using Catalog.Application.Events;
+using Catalog.Application.CommandHandlers;
 using Catalog.Infrastructure;
 using Catalog.Infrastructure.Context;
 using Infrastructure.Databases.EntityFrameworkCore;
-using Infrastructure.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddServiceRegistration(builder.Configuration, typeof(Program), typeof(ProductAdded));
+builder.Services.AddServiceRegistration(builder.Configuration, typeof(Program), typeof(CatalogCommandHandler));
 builder.Services.AddControllers(opt =>
 {
     opt.Filters.Add<ExceptionFilter>();
@@ -32,7 +31,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCoreReRegistration();
 app.UseAuthorization();
-app.UseSubscribeAllEvents(typeof(ProductAdded));
 app.MapControllers();
 app.Run();

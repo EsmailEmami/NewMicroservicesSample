@@ -8,6 +8,29 @@ services:
       - "5672:5672"
       - "15672:15672"
 
+  zookeeper:
+    container_name: zookeeper
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    container_name: kafka
+    restart: always
+    volumes:
+      - kafka_data:/bitnami/kafka
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+
   consul:
     hostname: consul
     container_name: consul
@@ -83,6 +106,7 @@ services:
       - "CacheSettings:ConnectionString=catalog_redisdb:6379"
       - "OutboxOptions:ConnectionString=mongodb://outboxdb:27017"
       - "ConsulOptions:ConsulAddress=http://consul:8500"
+      - "MessageBrokersOptions:hostnames[0]=rabbitmq"
     depends_on:
       - catalog_mongodb
       - catalog_mssqldb
@@ -97,3 +121,30 @@ services:
       - rabbitmq
     ports:
       - "8000:80"
+  
+  basket_redisdb:
+    container_name: basket_redisdb
+    restart: always    
+    command: --port 6380
+    ports:
+      - "6380:6380"
+
+  basket.api:
+    container_name: basket.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+  
+      - "CacheSettings:ConnectionString=basket_redisdb:6380"
+      - "OutboxOptions:ConnectionString=mongodb://outboxdb:27017"
+      - "ConsulOptions:ConsulAddress=http://consul:8500"
+      - "MessageBrokersOptions:hostnames[0]=rabbitmq"
+    depends_on:
+      - catalog_redisdb
+      - consul
+      - rabbitmq
+    links:
+      - basket_redisdb
+      - consul
+      - rabbitmq
+    ports:
+      - "8001:80"

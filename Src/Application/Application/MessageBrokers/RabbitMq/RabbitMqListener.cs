@@ -40,7 +40,7 @@ public class RabbitMqListener : IEventListener
             cfg => cfg.UseSubscribeConfiguration(
                 c => c
                 .OnDeclaredExchange(GetExchangeDeclaration(type))
-                .FromDeclaredQueue(q => q.WithName((_options.Queue.Name).Trim().Trim('_') + "_" + type.Name)))
+                .FromDeclaredQueue(q => q.WithName((_options.Queue.Name ?? AppDomain.CurrentDomain.FriendlyName).Trim().Trim('_') + "_" + type.Name)))
         );
     }
 
@@ -56,7 +56,7 @@ public class RabbitMqListener : IEventListener
             @event,
             cfg => cfg.UsePublishConfiguration(
                 c => c
-                .OnDeclaredExchange(GetExchangeDeclaration<TEvent>())
+                .OnDeclaredExchange(GetExchangeDeclaration(@event.GetType()))
             )
         );
     }

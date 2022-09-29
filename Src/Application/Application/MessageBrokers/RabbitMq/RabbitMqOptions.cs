@@ -10,11 +10,11 @@ public class RabbitMqOptions : RawRabbitConfiguration
 
 public class QueueOptions : GeneralQueueConfiguration
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }
 
 public class ExchangeOptions : GeneralExchangeConfiguration
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }
 
