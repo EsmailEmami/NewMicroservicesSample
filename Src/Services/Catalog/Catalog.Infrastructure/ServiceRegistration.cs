@@ -3,6 +3,7 @@ using BuildingBlocks.CatalogService.Product;
 using Catalog.Application.Services;
 using Catalog.Infrastructure.Context;
 using Catalog.Infrastructure.Services;
+using Infrastructure.Authorization;
 using Infrastructure.Consul;
 using Infrastructure.Core;
 using Infrastructure.Databases.EntityFrameworkCore;
@@ -23,6 +24,8 @@ public static class ServiceRegistration
     {
         types = typeof(ProductAddedEvent).PrependToParamArray(types);
 
+        services.AddCustomizedAuthorization(configuration);
+
         services.AddConsul(configuration);
         services.AddMessageBroker(configuration);
         services.AddOutbox(configuration);
@@ -37,8 +40,9 @@ public static class ServiceRegistration
         return services;
     }
 
-    public static IApplicationBuilder UseCoreReRegistration(this IApplicationBuilder app)
+    public static IApplicationBuilder UseCoreReRegistration(this IApplicationBuilder app,IConfiguration configuration)
     {
+        app.UseCustomizedAuthentication(configuration);
         app.UseSubscribeAllEvents(typeof(ProductAddedEvent));
 
         return app;

@@ -1,15 +1,13 @@
-﻿using Application.Core;
-using Application.Core.Repositories;
-using Application.Core.Repositories.Mongo;
-using Catalog.Application.Services;
+﻿using Catalog.Application.Services;
 using Catalog.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 
 namespace Catalog.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;

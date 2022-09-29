@@ -31,7 +31,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCoreReRegistration();
-app.UseAuthorization();
+app.UseCoreReRegistration(builder.Configuration);
 app.MapControllers();
 app.Run();
