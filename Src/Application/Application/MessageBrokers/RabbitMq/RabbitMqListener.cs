@@ -54,11 +54,10 @@ public class RabbitMqListener : IEventListener
 
         await _busClient.PublishAsync(
             @event,
-            cfg => cfg.UsePublishConfiguration(
-                c => c
-                .OnDeclaredExchange(GetExchangeDeclaration(@event.GetType()))
-            )
-        );
+            context =>
+            {
+                context.UsePublishConfiguration(builder => builder.OnDeclaredExchange(GetExchangeDeclaration<TEvent>()));
+            });
     }
 
     public virtual async Task Publish(string message, string type)

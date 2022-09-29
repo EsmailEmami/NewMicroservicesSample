@@ -1,5 +1,4 @@
-﻿
-using BuildingBlocks.CatalogService.Product;
+﻿using BuildingBlocks.CatalogService.Product;
 using Domain.Core.Events;
 using Microsoft.Extensions.Logging;
 
