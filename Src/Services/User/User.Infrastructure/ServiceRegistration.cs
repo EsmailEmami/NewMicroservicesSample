@@ -1,8 +1,5 @@
 ﻿using Application.Extensions;
 using BuildingBlocks.CatalogService.Product;
-using Catalog.Application.Services;
-using Catalog.Infrastructure.Context;
-using Catalog.Infrastructure.Services;
 using Infrastructure.ApiVersioning;
 using Infrastructure.Consul;
 using Infrastructure.Core;
@@ -15,8 +12,11 @@ using Infrastructure.Outbox;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using User.Application.Core.User;
+using User.Application.Services.User;
+using User.Infrastructure.Context;
 
-namespace Catalog.Infrastructure;
+namespace User.Infrastructure;
 
 public static class ServiceRegistration
 {
@@ -28,14 +28,12 @@ public static class ServiceRegistration
         services.AddMessageBroker(configuration);
         services.AddOutbox(configuration);
         services.AddCore(types);
-
-        services.AddMongoDb(configuration);
-        services.AddDbContext<CatalogDbContext>(configuration);
-        services.AddRedis(configuration);
+        
+        services.AddDbContext<UserDbContext>(configuration);
 
         services.AddApiVersioning(configuration);
 
-        services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IUserService, UserService>();
 
         return services;
     }

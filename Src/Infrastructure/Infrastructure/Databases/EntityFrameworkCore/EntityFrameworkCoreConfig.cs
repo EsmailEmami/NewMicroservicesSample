@@ -2,6 +2,7 @@
 using Application.Core;
 using Application.Core.Repositories.EfCore;
 using Domain.Core.Entities;
+using Domain.Core.Events.EfCore;
 using Infrastructure.Repositories.EfCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +41,7 @@ public static class EntityFrameworkCoreConfig
 
     public static void MigrateDatabase<TContext>(this IHost host,
         Action<TContext, IServiceProvider> seeder,
-        int? retry = 5) where TContext : DbContext
+        int? retry = 0) where TContext : DbContext
     {
         if (retry != null)
         {
@@ -85,7 +86,10 @@ public static class EntityFrameworkCoreConfig
     public static void RegisterAllEntities(this ModelBuilder modelBuilder, params Assembly[] assemblies)
     {
         var types = assemblies.SelectMany(a => a.GetExportedTypes())
-            .Where(c => c.IsClass && !c.IsAbstract && c.IsPublic && (typeof(Entity).IsAssignableFrom(c) || typeof(Entity<>).IsAssignableFrom(c)));
+            .Where(c => c.IsClass && !c.IsAbstract && c.IsPublic && (typeof(EfCoreEntity).IsAssignableFrom(c) 
+                                                                     || typeof(EfCoreEntity<>).IsAssignableFrom(c) 
+                                                                     || typeof(Entity<>).IsAssignableFrom(c)
+                                                                     || typeof(Entity).IsAssignableFrom(c)));
 
         foreach (var type in types)
             modelBuilder.Entity(type);

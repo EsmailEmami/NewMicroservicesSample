@@ -49,6 +49,12 @@ services:
       context: ../
       dockerfile: Src/Services/basket/Basket.Api/Dockerfile
 
+  ocelotapigw:
+    image: ${DOCKER_REGISTRY-}ocelotapigw
+    build:
+      context: ../
+      dockerfile: Src/ApiGetways/OcelotApiGw/OcelotApiGw/Dockerfile
+
 volumes:
   catalog_mongo_data:
   outbox_mongo_data:

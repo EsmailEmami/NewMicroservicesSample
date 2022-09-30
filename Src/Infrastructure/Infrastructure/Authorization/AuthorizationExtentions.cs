@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using Application.Authorization;
+using Domain.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +16,10 @@ public static class AuthorizationExtentions
     public static IServiceCollection AddCustomizedAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpContextAccessor();
+
+
+        services.AddScoped<IUser, AspNetUser>();
+        services.AddSingleton<IJwtFactory, JwtFactory>();
 
         var options = new JwtBearerOptions();
         configuration.GetSection(nameof(JwtBearerOptions)).Bind(options);
