@@ -1,7 +1,6 @@
 using Application.Filters;
 using Basket.Application.EventHandlers;
 using Basket.Infrastructure;
-using Infrastructure.Databases.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,13 +19,12 @@ builder.Services.AddHealthChecks();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseCoreReRegistration();
-app.UseAuthorization();
+app.UseCoreRegistration();
 app.MapControllers();
 app.Run();

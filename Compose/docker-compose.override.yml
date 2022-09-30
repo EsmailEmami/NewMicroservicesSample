@@ -100,13 +100,7 @@ services:
   catalog.api:
     container_name: catalog.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - "MongoDbSettings:ConnectionString=mongodb://catalog_mongodb:27018"
-      - "ConnectionStrings:SqlConnectionString=Server=catalog_mssqldb;Database=CatalogDb;User Id=sa;Password=SwN12345678"  
-      - "CacheSettings:ConnectionString=catalog_redisdb:6379"
-      - "OutboxOptions:ConnectionString=mongodb://outboxdb:27017"
-      - "ConsulOptions:ConsulAddress=http://consul:8500"
-      - "MessageBrokersOptions:hostnames[0]=rabbitmq"
+      - ASPNETCORE_ENVIRONMENT=Staging
     depends_on:
       - catalog_mongodb
       - catalog_mssqldb
@@ -132,12 +126,7 @@ services:
   basket.api:
     container_name: basket.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-  
-      - "CacheSettings:ConnectionString=basket_redisdb:6380"
-      - "OutboxOptions:ConnectionString=mongodb://outboxdb:27017"
-      - "ConsulOptions:ConsulAddress=http://consul:8500"
-      - "MessageBrokersOptions:hostnames[0]=rabbitmq"
+      - ASPNETCORE_ENVIRONMENT=Staging
     depends_on:
       - catalog_redisdb
       - consul

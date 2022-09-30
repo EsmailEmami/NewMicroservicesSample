@@ -25,12 +25,12 @@ app.MigrateDatabase<CatalogDbContext>((context, provider) =>
 });
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseCoreReRegistration(builder.Configuration);
+app.UseCoreRegistration(builder.Configuration);
 app.MapControllers();
 app.Run();

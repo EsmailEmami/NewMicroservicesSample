@@ -7,12 +7,15 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": "8000"
         }
       ],
       "UpstreamPathTemplate": "/Product",
       "UpstreamHttpMethod": [ "GET", "POST" ],
-      "FileCacheOptions": { "TtlSeconds": 30 }
+      "FileCacheOptions": {
+        "TtlSeconds": 30
+      },
+      "SwaggerKey": "catalog"
     },
     {
       "DownstreamPathTemplate": "/api/Product/{productId}",
@@ -20,11 +23,24 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": "8000"
         }
       ],
       "UpstreamPathTemplate": "/Product/{productId}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "SwaggerKey": "catalog"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "catalog",
+      "Config": [
+        {
+          "Name": "Catalog API",
+          "Version": "v1",
+          "Url": "http://localhost:8000/swagger/v1/swagger.json"
+        }
+      ]
     }
   ],
   "GlobalConfiguration": {

@@ -26,7 +26,7 @@ public static class ServiceRegistration
 
         return services;
     }
-    public static IApplicationBuilder UseCoreReRegistration(this IApplicationBuilder app)
+    public static IApplicationBuilder UseCoreRegistration(this IApplicationBuilder app)
     {
         app.UseSubscribeAllEvents(typeof(ProductAddedEvent));
 

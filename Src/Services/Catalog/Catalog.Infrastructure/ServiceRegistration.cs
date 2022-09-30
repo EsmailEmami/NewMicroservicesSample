@@ -24,8 +24,6 @@ public static class ServiceRegistration
     {
         types = typeof(ProductAddedEvent).PrependToParamArray(types);
 
-        services.AddCustomizedAuthorization(configuration);
-
         services.AddConsul(configuration);
         services.AddMessageBroker(configuration);
         services.AddOutbox(configuration);
@@ -40,9 +38,8 @@ public static class ServiceRegistration
         return services;
     }
 
-    public static IApplicationBuilder UseCoreReRegistration(this IApplicationBuilder app,IConfiguration configuration)
+    public static IApplicationBuilder UseCoreRegistration(this IApplicationBuilder app,IConfiguration configuration)
     {
-        app.UseCustomizedAuthentication(configuration);
         app.UseSubscribeAllEvents(typeof(ProductAddedEvent));
 
         return app;
