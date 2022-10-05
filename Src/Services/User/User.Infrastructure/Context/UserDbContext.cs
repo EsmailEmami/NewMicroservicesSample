@@ -1,4 +1,6 @@
-﻿using Infrastructure.Context;
+﻿using System.Linq.Expressions;
+using Domain.Core.Entities;
+using Infrastructure.Context;
 using Infrastructure.Databases.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using User.Domain.Entities;

@@ -13,7 +13,12 @@
   <ItemGroup>
     <Folder Include="User\Commands\" />
     <Folder Include="User\Dtos\" />
+    <Folder Include="User\Validators\" />
     <Folder Include="User\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.2.2" />
   </ItemGroup>
 
 </Project>

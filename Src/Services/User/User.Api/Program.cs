@@ -1,4 +1,8 @@
+using BuildingBlocks.CatalogService.Product;
+using User.Application.Core.User.Commands;
+using User.Application.Services.User;
 using User.Infrastructure;
+using User.Infrastructure.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddServiceRegistration(builder.Configuration);
+builder.Services.AddServiceRegistration(builder.Configuration, typeof(Program), typeof(ProductAddedEvent), typeof(UserDbContext), typeof(UserCommandHandler), typeof(CreateUserCommand));
 
 var app = builder.Build();
 

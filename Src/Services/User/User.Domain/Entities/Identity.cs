@@ -1,18 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Domain.Core.Events.EfCore;
+﻿using Domain.Core.Events.EfCore;
 using Domain.Exceptions;
 
 namespace User.Domain.Entities;
 
-public class Role : EfCoreEntity<Guid>
+public class Identity : EfCoreEntity<Guid>
 {
-    public override Guid Id { get; set; }
-
-    public Role(RoleType type)
+    public Identity(string password)
     {
-        Type = type;
+        Password = password;
     }
-    public RoleType Type { get; }
+
+    public override Guid Id { get; set; } = Guid.NewGuid();
+    public string Password { get; private set; }
+    public virtual User User { get; }
+
     public virtual ICollection<IdentityRole> IdentityRole { get; } = new List<IdentityRole>();
 
     #region IdentityRole
@@ -33,10 +34,7 @@ public class Role : EfCoreEntity<Guid>
     public void ClearIdentityRole() => IdentityRole.Clear();
 
     #endregion
-}
 
-public enum RoleType
-{
-    [Display(Name = "سیستم ادمین")]
-    SystemAdmin = 0,
+    public void SetPassword(string password) => Password = password;
+    
 }

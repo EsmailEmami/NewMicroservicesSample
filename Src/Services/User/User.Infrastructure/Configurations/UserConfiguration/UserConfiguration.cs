@@ -12,6 +12,6 @@ public class UserConfiguration : IEntityTypeConfiguration<Domain.Entities.User>
         builder.Property(x => x.FirstName).HasMaxLength(150);
         builder.Property(x => x.LastName).HasMaxLength(150);
         builder.Property(x => x.UserName).IsRequired().HasMaxLength(150);
-        builder.HasIndex(x => x.UserName).IsUnique().IsClustered();
+        builder.HasIndex(x => x.UserName).IsUnique();
     }
 }

@@ -15,7 +15,14 @@ public class UserCommandHandler : ICommandHandler<CreateUserCommand, long>
 
     public async Task<long> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = new Domain.Entities.User().Set(request.FirstName, request.LastName, request.UserName);
+        if (!request.IsValid())
+        {
+            
+        }
+
+
+        var user = new Domain.Entities.User(request.FirstName, request.LastName, request.UserName);
+        user.SetIdentity("this is my password for identity requires");
 
         var userId = await _userRepository.InsertAndGetIdAsync(user);
 

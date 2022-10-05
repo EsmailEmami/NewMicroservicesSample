@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\UserRoleConfiguration\" />
+    <Folder Include="Configurations\IdentityConfiguration\" />
     <Folder Include="Configurations\RoleConfiguration\" />
     <Folder Include="Configurations\UserConfiguration\" />
   </ItemGroup>

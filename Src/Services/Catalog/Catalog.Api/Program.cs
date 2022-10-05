@@ -51,10 +51,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 
 builder.Services.AddServiceRegistration(builder.Configuration, typeof(Program), typeof(CatalogCommandHandler));
-builder.Services.AddControllers(opt =>
-{
-    opt.Filters.Add<ExceptionFilter>();
-});
+
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();

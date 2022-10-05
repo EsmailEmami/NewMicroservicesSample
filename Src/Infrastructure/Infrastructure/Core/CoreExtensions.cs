@@ -4,6 +4,7 @@ using Application.Events;
 using Application.Filters;
 using Domain.Commands;
 using Domain.Queries;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,15 +15,16 @@ public static class CoreExtensions
 {
     public static IServiceCollection AddCore(this IServiceCollection services, params Type[] types)
     {
-        var assemblies = types.Select(type => type.GetTypeInfo().Assembly);
+        var assemblies = types.Select(type => type.GetTypeInfo().Assembly).ToArray();
 
         foreach (var assembly in assemblies)
             services.AddMediatR(assembly);
 
+        services.AddControllers(opt => opt.Filters.Add<ExceptionFilter>());
+
         services.AddScoped<ICommandBus, CommandBus>();
         services.AddScoped<IQueryBus, QueryBus>();
         services.AddScoped<IEventBus, EventBus>();
-        //ervices.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
         return services;
     }
