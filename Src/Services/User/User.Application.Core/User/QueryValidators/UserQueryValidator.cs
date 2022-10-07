@@ -20,4 +20,10 @@ public class UserQueryValidator<TQuery, TResponse> : AbstractValidator<TQuery> w
             .MaximumLength(450)
             .WithMessage("حداکثر کاراکتر برای رمز عبور 450 کاراکتر میباشد.");
     }
+
+    public void ValidateId()
+    {
+        RuleFor(x => x.UserId).NotEqual(0)
+            .WithMessage("لطفا شناسه کاربر را وارد کنید");
+    }
 }

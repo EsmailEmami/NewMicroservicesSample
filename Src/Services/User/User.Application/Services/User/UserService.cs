@@ -1,8 +1,5 @@
-﻿using System.Security.Claims;
-using Application.Authorization;
-using Application.Common;
+﻿using Application.Common;
 using Application.Security;
-using AutoMapper;
 using Domain.Commands;
 using Domain.Queries;
 using User.Application.Core.Identity.Query;
@@ -17,17 +14,13 @@ public class UserService : IUserService
 {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
-    private readonly IMapper _mapper;
-    private readonly IJwtFactory _jwtFactory;
     private readonly IPasswordHasher _passwordHasher;
 
-    public UserService(ICommandBus commandBus, IMapper mapper, IPasswordHasher passwordHasher, IQueryBus queryBus, IJwtFactory jwtFactory)
+    public UserService(ICommandBus commandBus, IQueryBus queryBus, IPasswordHasher passwordHasher)
     {
         _commandBus = commandBus;
-        _mapper = mapper;
-        _passwordHasher = passwordHasher;
         _queryBus = queryBus;
-        _jwtFactory = jwtFactory;
+        _passwordHasher = passwordHasher;
     }
 
     public Task<long> AddUser(CreateUserDto userDto)
@@ -37,7 +30,7 @@ public class UserService : IUserService
         return _commandBus.Send(createUserCommand);
     }
 
-    public async Task<string> Login(LoginUserDto loginDto)
+    public async Task<Domain.Entities.User> Login(LoginUserDto loginDto)
     {
         var query = Mapping.Map<LoginUserDto, GetUserByUserNameQuery>(loginDto);
         var user = await _queryBus.Send(query);
@@ -50,19 +43,13 @@ public class UserService : IUserService
         if (!passwordCheck)
             throw new ApplicationException("کاربر یافت نشد.");
 
-        return await GenerateToken(user);
+        return user;
     }
 
-    private async Task<string> GenerateToken(Domain.Entities.User user)
+    public async Task<Domain.Entities.User> GetById(long userId)
     {
-        // Init ClaimsIdentity
-        var claimsIdentity = new ClaimsIdentity();
-        claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-        claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
-
-        // Generate access token
-        var jwtToken = await _jwtFactory.GenerateJwtToken(claimsIdentity);
-
-        return jwtToken;
+        var query = new GetUserByUserIdQuery(userId);
+        var user = await _queryBus.Send(query);
+        return user;
     }
 }

@@ -7,11 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Extensions\" />
+    <Folder Include="GrpcServices\" />
+    <Folder Include="Security\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\..\User\User.Grpc\Protos\authentication.proto" GrpcServices="Client">
+      <Link>Protos\authentication.proto</Link>
+    </Protobuf>
   </ItemGroup>
 
 </Project>

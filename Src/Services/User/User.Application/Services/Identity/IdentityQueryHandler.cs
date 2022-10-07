@@ -4,7 +4,8 @@ using User.Application.Core.Identity.Query;
 
 namespace User.Application.Services.Identity;
 
-public class IdentityQueryHandler : QueryHandler<GetIdentityQuery, Domain.Entities.Identity>
+public class IdentityQueryHandler : QueryHandler,
+    IQueryHandler<GetIdentityQuery, Domain.Entities.Identity>
 {
     private readonly IEfCoreRepository<Domain.Entities.Identity, Guid> _identityRepository;
 
@@ -13,7 +14,7 @@ public class IdentityQueryHandler : QueryHandler<GetIdentityQuery, Domain.Entiti
         _identityRepository = identityRepository;
     }
 
-    public override async Task<Domain.Entities.Identity> Handle(GetIdentityQuery request, CancellationToken cancellationToken)
+    public async Task<Domain.Entities.Identity> Handle(GetIdentityQuery request, CancellationToken cancellationToken)
     {
         return await _identityRepository.GetAsync(request.Id);
     }

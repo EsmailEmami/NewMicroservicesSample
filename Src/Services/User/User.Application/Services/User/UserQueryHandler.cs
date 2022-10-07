@@ -5,7 +5,9 @@ using User.Application.Core.User.Queries;
 
 namespace User.Application.Services.User;
 
-public class UserQueryHandler : QueryHandler<GetUserByUserNameQuery, Domain.Entities.User>
+public class UserQueryHandler : QueryHandler,
+    IQueryHandler<GetUserByUserNameQuery, Domain.Entities.User>,
+    IQueryHandler<GetUserByUserIdQuery, Domain.Entities.User>
 {
     private readonly IEfCoreRepository<Domain.Entities.User, long> _userRepository;
 
@@ -14,13 +16,20 @@ public class UserQueryHandler : QueryHandler<GetUserByUserNameQuery, Domain.Enti
         _userRepository = userRepository;
     }
 
-    public override Task<Domain.Entities.User> Handle(GetUserByUserNameQuery request, CancellationToken cancellationToken)
+    public Task<Domain.Entities.User> Handle(GetUserByUserNameQuery request, CancellationToken cancellationToken)
     {
         CheckValidation(request);
         var user = _userRepository.FirstOrDefault(x => x.UserName == request.UserName);
         if (user == null)
             throw new EntityNotFoundException("کاربر یافت نشد");
 
+        return Task.FromResult(user);
+    }
+
+    public Task<Domain.Entities.User> Handle(GetUserByUserIdQuery request, CancellationToken cancellationToken)
+    {
+        CheckValidation(request);
+        var user = _userRepository.Get(request.UserId);
         return Task.FromResult(user);
     }
 }

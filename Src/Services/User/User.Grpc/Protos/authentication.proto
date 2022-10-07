@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "User.Grpc.Protos";
+
+service AuthenticationProtoService {
+	rpc GetAuthenticatedUser (AuthenticatedUserRequest) returns (AuthenticatedUserResponse);
+	rpc GetAuthenticatedUserByUserId (GetAuthenticatedUserByUserIdRequest) returns (AuthenticatedUserResponse);
+}
+
+message AuthenticatedUserRequest {
+	string userName = 1;
+	string password = 2;
+}
+
+message AuthenticatedUserResponse {
+	int64 userId = 1;
+	string firstName = 2;
+	string lastName = 3;
+	string userName = 4;
+}
+
+message GetAuthenticatedUserByUserIdRequest {
+	int64 userId = 1;
+}

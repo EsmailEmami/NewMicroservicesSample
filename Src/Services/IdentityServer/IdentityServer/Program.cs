@@ -1,8 +1,21 @@
 using IdentityServer.Extensions;
+using IdentityServer.GrpcServices;
+using IdentityServer.Security;
+using IdentityServer4.Services;
+using IdentityServer4.Validation;
+using User.Grpc.Protos;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddICustomizeddentityServer();
+//Inject the classes we just created
+builder.Services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
+builder.Services.AddTransient<IProfileService, ProfileService>();
+builder.Services.AddCustomizeddentityServer();
+
+// Grpc Configuration
+builder.Services.AddGrpcClient<AuthenticationProtoService.AuthenticationProtoServiceClient>
+    (o => o.Address = new Uri(builder.Configuration["GrpcSettings:UserUrl"]));
+builder.Services.AddScoped<AuthenticationGrpcService>();
 
 var app = builder.Build();
 

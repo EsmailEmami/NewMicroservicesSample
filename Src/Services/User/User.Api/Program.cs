@@ -1,4 +1,5 @@
 using BuildingBlocks.CatalogService.Product;
+using Infrastructure.Authorization;
 using User.Application.Core.User.Commands;
 using User.Application.Services.User;
 using User.Infrastructure;
@@ -14,6 +15,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddServiceRegistration(builder.Configuration, typeof(Program), typeof(ProductAddedEvent), typeof(UserDbContext), typeof(UserCommandHandler), typeof(CreateUserCommand));
 
+builder.Services.AddJwtIdentity(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,9 +26,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCoreRegistration(builder.Configuration);
-
-app.UseAuthorization();
+app.UseCoreRegistration();
+app.UseIdentity();
 
 app.MapControllers();
 

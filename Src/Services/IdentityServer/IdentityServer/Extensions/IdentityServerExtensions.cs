@@ -2,7 +2,7 @@
 
 public static class IdentityServerExtensions
 {
-    public static IServiceCollection AddICustomizeddentityServer(this IServiceCollection services)
+    public static IServiceCollection AddCustomizeddentityServer(this IServiceCollection services)
     {
         services.AddIdentityServer()
             .AddInMemoryClients(Config.Clients)

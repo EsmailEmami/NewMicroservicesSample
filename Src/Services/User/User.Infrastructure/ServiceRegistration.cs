@@ -1,7 +1,6 @@
 ﻿using Application.Extensions;
 using BuildingBlocks.CatalogService.Product;
 using Infrastructure.ApiVersioning;
-using Infrastructure.Authorization;
 using Infrastructure.Consul;
 using Infrastructure.Core;
 using Infrastructure.Databases.EntityFrameworkCore;
@@ -29,8 +28,6 @@ public static class ServiceRegistration
         services.AddOutbox(configuration);
         services.AddCore(types);
 
-        services.AddCustomizedAuthorization(configuration);
-
         services.AddAutoMapper(typeof(CreateUserDtoMap).Assembly);
 
         services.AddDbContext<UserDbContext>(configuration);
@@ -42,10 +39,9 @@ public static class ServiceRegistration
         return services;
     }
 
-    public static IApplicationBuilder UseCoreRegistration(this IApplicationBuilder app,IConfiguration configuration)
+    public static IApplicationBuilder UseCoreRegistration(this IApplicationBuilder app)
     {
         app.UseSubscribeAllEvents(typeof(ProductAddedEvent));
-        app.UseCustomizedAuthentication(configuration);
 
         return app;
     }
