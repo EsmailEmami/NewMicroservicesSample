@@ -1,5 +1,6 @@
 ﻿using Domain.Core.Commands;
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 
 namespace Catalog.Application.Commands.Product;
@@ -11,6 +12,14 @@ public class AddProductCommand :  ICommand<Guid>
     {
         Product = product;
     }
+
+    public bool IsValid()
+    {
+        return true;
+    }
+
+    public DateTime Timestamp { get; }
+    public ValidationResult ValidationResult { get; set; }
 }
 
 public class Validator : AbstractValidator<AddProductCommand>

@@ -1,5 +1,4 @@
-﻿using FluentValidation.Results;
-using User.Application.Core.User.Validators;
+﻿using User.Application.Core.User.CommandValidators;
 
 namespace User.Application.Core.User.Commands;
 

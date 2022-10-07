@@ -1,5 +1,22 @@
 version: '3.4'
 
+networks:
+  # Network for api gateway
+  network-gateway:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.2.0/24
+  # Network for microservices
+  network-microservice:
+    #internal: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.4.0/24
+
 services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -54,6 +71,12 @@ services:
     build:
       context: ../
       dockerfile: Src/ApiGetways/OcelotApiGw/OcelotApiGw/Dockerfile
+
+  identityserver:
+    image: ${DOCKER_REGISTRY-}identityserver
+    build:
+      context: ../
+      dockerfile: Src/Services/IdentityServer/IdentityServer/Dockerfile
 
 volumes:
   catalog_mongo_data:

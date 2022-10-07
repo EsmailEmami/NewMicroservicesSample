@@ -4,6 +4,10 @@ namespace User.Domain.Entities
 {
     public class IdentityRole : Entity
     {
+        public IdentityRole()
+        {
+        }
+
         public IdentityRole(Guid identityId, Guid roleId)
         {
             IdentityId = identityId;

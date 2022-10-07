@@ -1,12 +1,13 @@
 ﻿using Catalog.Application.Services;
 using Catalog.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Catalog.Api.Controllers.V1
+namespace Catalog.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [ApiVersion("1.0")]
+    [Authorize()]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;

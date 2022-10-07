@@ -46,4 +46,9 @@ public class EfCoreMainDbContext<T> : DbContext, IUnitOfWork where T : DbContext
     public new Database Database => Database;
     public DbContext Context => this;
     public HttpContext CurrentHttpContext => CurrentHttpContext;
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLazyLoadingProxies();
+    }
 }

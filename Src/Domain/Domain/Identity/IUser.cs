@@ -2,6 +2,6 @@
 
 public interface IUser
 {
-    Guid UserId { get; }
+    long UserId { get; }
     bool IsAuthenticated();
 }

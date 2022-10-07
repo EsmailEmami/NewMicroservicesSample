@@ -2,7 +2,6 @@
 
 public static class StringExtensions
 {
-    public static Guid ToGuid(this string value) => Guid.TryParse(value, out Guid result) ? result : Guid.Empty;
     public static bool HasValue(this string? value) => !string.IsNullOrEmpty(value);
     public static string GetValueOrDefault(this string? value) => (value.HasValue() ? value : string.Empty) ?? throw new InvalidOperationException("خطا در اعتبار سنجی");
 }

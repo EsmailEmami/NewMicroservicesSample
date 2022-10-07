@@ -4,7 +4,7 @@ using User.Application.Core.User.Commands;
 
 namespace User.Application.Services.User;
 
-public class UserCommandHandler : ICommandHandler<CreateUserCommand, long>
+public class UserCommandHandler : CommandHandler<CreateUserCommand, long>
 {
     private readonly IEfCoreRepository<Domain.Entities.User, long> _userRepository;
 
@@ -13,17 +13,13 @@ public class UserCommandHandler : ICommandHandler<CreateUserCommand, long>
         _userRepository = userRepository;
     }
 
-    public async Task<long> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+
+    public override async Task<long> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        if (!request.IsValid())
-        {
-            
-        }
+        CheckValidation(request);
 
-
-        var user = new Domain.Entities.User(request.FirstName, request.LastName, request.UserName);
-        user.SetIdentity("this is my password for identity requires");
-
+        var user = new Domain.Entities.User(request.FirstName, request.LastName, request.UserName, request.Password);
+        var userIdentiy = user.Identiy;
         var userId = await _userRepository.InsertAndGetIdAsync(user);
 
         return userId;

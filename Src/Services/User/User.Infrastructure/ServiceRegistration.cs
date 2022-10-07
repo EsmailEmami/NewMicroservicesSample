@@ -1,11 +1,10 @@
 ﻿using Application.Extensions;
 using BuildingBlocks.CatalogService.Product;
 using Infrastructure.ApiVersioning;
+using Infrastructure.Authorization;
 using Infrastructure.Consul;
 using Infrastructure.Core;
 using Infrastructure.Databases.EntityFrameworkCore;
-using Infrastructure.Databases.MongoDb;
-using Infrastructure.Databases.Redis;
 using Infrastructure.Events;
 using Infrastructure.MessageBrokers;
 using Infrastructure.Outbox;
@@ -14,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using User.Application.Core.User;
 using User.Application.Services.User;
+using User.Application.Services.User.MappingProfiles;
 using User.Infrastructure.Context;
 
 namespace User.Infrastructure;
@@ -28,7 +28,11 @@ public static class ServiceRegistration
         services.AddMessageBroker(configuration);
         services.AddOutbox(configuration);
         services.AddCore(types);
-        
+
+        services.AddCustomizedAuthorization(configuration);
+
+        services.AddAutoMapper(typeof(CreateUserDtoMap).Assembly);
+
         services.AddDbContext<UserDbContext>(configuration);
 
         services.AddApiVersioning(configuration);
@@ -38,9 +42,10 @@ public static class ServiceRegistration
         return services;
     }
 
-    public static IApplicationBuilder UseCoreRegistration(this IApplicationBuilder app, IConfiguration configuration)
+    public static IApplicationBuilder UseCoreRegistration(this IApplicationBuilder app,IConfiguration configuration)
     {
         app.UseSubscribeAllEvents(typeof(ProductAddedEvent));
+        app.UseCustomizedAuthentication(configuration);
 
         return app;
     }

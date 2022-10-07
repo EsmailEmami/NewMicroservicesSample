@@ -30,7 +30,12 @@ public class User : EfCoreEntity<long>
 
     public void SetIdentity(string password)
     {
-        var identity = new Identity(password);
+        var identity = new Identity(password, this);
+        SetIdentity(identity);
+    }
+
+    public void SetIdentity(Identity identity)
+    {
         IdentityId = identity.Id;
         Identiy = identity;
     }

@@ -11,9 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="User\Commands\" />
+    <Folder Include="Identity\Commands\" />
+    <Folder Include="Identity\CommandValidators\" />
+    <Folder Include="Identity\Query\" />
     <Folder Include="User\Dtos\" />
-    <Folder Include="User\Validators\" />
+    <Folder Include="User\QueryValidators\" />
     <Folder Include="User\Queries\" />
   </ItemGroup>
 

@@ -1,51 +1,38 @@
-﻿using System.Text;
-using Application.Authorization;
-using Domain.Identity;
+﻿using Domain.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
-using JwtBearerOptions = Application.Authorization.JwtBearerOptions;
+using IdentityOptions = Application.Authorization.IdentityOptions;
 
 namespace Infrastructure.Authorization;
 
 public static class AuthorizationExtentions
 {
-    public static IServiceCollection AddCustomizedAuthorization(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddJwtIdentity(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpContextAccessor();
 
-
         services.AddScoped<IUser, AspNetUser>();
-        services.AddSingleton<IJwtFactory, JwtFactory>();
+        var options = new IdentityOptions();
+        configuration.GetSection(nameof(IdentityOptions)).Bind(options);
 
-        var options = new JwtBearerOptions();
-        configuration.GetSection(nameof(JwtBearerOptions)).Bind(options);
-        var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(options.SecretKey));
-
-        services.Configure<JwtBearerOptions>(config =>
-        {
-            config = options;
-            config.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-        });
-
+        services.Configure<IdentityOptions>(configuration.GetSection(nameof(IdentityOptions)));
 
         var tokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = options.ValidateIssuer,
-            ValidIssuer = options.Issuer,
-            ValidateAudience = options.ValidateAudience,
-            ValidAudience = options.Audience,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = signingKey,
-            RequireExpirationTime = false,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
+            ValidateIssuer = options.TokenParameters.ValidateIssuer,
+            ValidIssuers = options.TokenParameters.ValidIssuers,
+            ValidateAudience = options.TokenParameters.ValidateAudience,
+            ValidAudiences = options.TokenParameters.ValidAudiences,
+            RequireExpirationTime = options.TokenParameters.RequireExpirationTime,
+            ValidateLifetime = options.TokenParameters.ValidateLifetime,
+            ClockSkew = options.TokenParameters.ClockSkew,
         };
 
-        var signalRJwtEvent = new JwtBearerEvents()
+        var signalRJwtEvent = new JwtBearerEvents
         {
             OnMessageReceived = context =>
             {
@@ -53,9 +40,12 @@ public static class AuthorizationExtentions
 
                 // If the request is for our hub...
                 var path = context.HttpContext.Request.Path;
-                if (!string.IsNullOrEmpty(accessToken))
+                if (options.ValidEventPaths == null || string.IsNullOrEmpty(accessToken))
+                    return Task.CompletedTask;
+
+                foreach (var validPath in options.ValidEventPaths)
                 {
-                    foreach (var route in options.RoutesToValidate)
+                    if (path.StartsWithSegments(validPath))
                     {
                         // Read the token out of the query string
                         context.Token = accessToken;
@@ -65,40 +55,35 @@ public static class AuthorizationExtentions
             }
         };
 
-        services.AddAuthentication(options =>
+        services.AddAuthentication(authenticationOptions =>
         {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            authenticationOptions.DefaultScheme = options.DefaultScheme;
+            authenticationOptions.DefaultAuthenticateScheme = options.DefaultAuthenticateScheme;
+            authenticationOptions.DefaultChallengeScheme = options.DefaultChallengeScheme;
 
-        }).AddJwtBearer(options.ProviderKey, configureOptions =>
+        }).AddJwtBearer(options.DefaultScheme, configureOptions =>
         {
-            configureOptions.ClaimsIssuer = options.Issuer;
+            configureOptions.RequireHttpsMetadata = options.RequireHttpsMetadata;
+            configureOptions.Authority = options.Authority;
+            configureOptions.Audience = options.Audience;
+            configureOptions.ClaimsIssuer = options.ClaimsIssuer;
             configureOptions.TokenValidationParameters = tokenValidationParameters;
-            configureOptions.SaveToken = true;
+            configureOptions.SaveToken = options.SaveToken;
             configureOptions.Events = signalRJwtEvent;
         });
 
-        services.AddAuthorization();
-
-        services.AddCors(corsOptions =>
+        services.AddAuthorization(authorizationOptions =>
         {
-            corsOptions.AddPolicy(options.CorsName, builder =>
+            foreach (var identityPolicy in options.Policies)
             {
-                builder.AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials()
-                    .WithOrigins(options.OriginAccess)
-                    .Build();
-
-            });
+                authorizationOptions.AddPolicy(identityPolicy.Name, policy => policy.RequireClaim(identityPolicy.ClaimType, identityPolicy.Values));
+            }
         });
 
         return services;
     }
-    public static IApplicationBuilder UseCustomizedAuthentication(this IApplicationBuilder app, IConfiguration configuration)
+    public static IApplicationBuilder UseIdentity(this IApplicationBuilder app)
     {
-        app.UseCors(configuration.GetValue<string>("JwtBearerOptions:CorsName"));
-
         app.UseAuthentication();
         app.UseAuthorization();
         return app;

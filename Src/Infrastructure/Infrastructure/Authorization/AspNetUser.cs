@@ -13,7 +13,7 @@ public class AspNetUser : IUser
         _accessor = accessor;
     }
 
-    public Guid UserId => _accessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)!.Value.ToGuid();
+    public long UserId => _accessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value.Parse<long>() ?? 0;
 
     public bool IsAuthenticated() => _accessor.HttpContext!.User.Identity!.IsAuthenticated;
 }

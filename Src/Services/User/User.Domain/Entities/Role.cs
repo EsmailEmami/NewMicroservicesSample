@@ -6,7 +6,12 @@ namespace User.Domain.Entities;
 
 public class Role : EfCoreEntity<Guid>
 {
-    public override Guid Id { get; set; }
+    public Role()
+    {
+        
+    }
+
+    public override Guid Id { get; set; } = Guid.NewGuid();
 
     public Role(RoleType type)
     {

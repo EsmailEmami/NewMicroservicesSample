@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
-using Application.Behaviors;
 using Application.Events;
 using Application.Filters;
+using Application.Security;
 using Domain.Commands;
 using Domain.Queries;
-using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,9 +21,13 @@ public static class CoreExtensions
 
         services.AddControllers(opt => opt.Filters.Add<ExceptionFilter>());
 
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddScoped<ICommandBus, CommandBus>();
         services.AddScoped<IQueryBus, QueryBus>();
         services.AddScoped<IEventBus, EventBus>();
+
+        services.AddOptions();
+        services.AddHealthChecks();
 
         return services;
     }

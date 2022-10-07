@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using User.Application.Core.User.Commands;
 
-namespace User.Application.Core.User.Validators;
+namespace User.Application.Core.User.CommandValidators;
 
 public class UserCommandValidator<TCommand, TResponse> : AbstractValidator<TCommand> where TCommand : UserCommand<TResponse>
 {

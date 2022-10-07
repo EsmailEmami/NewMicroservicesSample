@@ -5,12 +5,18 @@ namespace User.Domain.Entities;
 
 public class Identity : EfCoreEntity<Guid>
 {
-    public Identity(string password)
+    public Identity()
+    {
+    }
+
+    public Identity(string password, User user)
     {
         Password = password;
+        User = user;
     }
 
     public override Guid Id { get; set; } = Guid.NewGuid();
+
     public string Password { get; private set; }
     public virtual User User { get; }
 
@@ -18,16 +24,16 @@ public class Identity : EfCoreEntity<Guid>
 
     #region IdentityRole
 
-    public void AddIdentityRole(Guid identityId)
+    public void AddIdentityRole(Guid roleId)
     {
-        if (IdentityRole.Any(x => x.IdentityId == identityId && x.RoleId == Id))
+        if (IdentityRole.Any(x => x.RoleId == roleId))
             throw new ApplicationException("مقدار مورد نظر تکراری است.");
 
-        IdentityRole.Add(new IdentityRole(identityId, Id));
+        IdentityRole.Add(new IdentityRole(Id, roleId));
     }
-    public void RemoveIdentityRole(Guid identityId)
+    public void RemoveIdentityRole(Guid roleId)
     {
-        var identityRole = IdentityRole.SingleOrDefault(x => x.IdentityId == identityId);
+        var identityRole = IdentityRole.SingleOrDefault(x => x.RoleId == roleId);
         if (identityRole == null) throw new EntityNotFoundException("مقدار مورد نظر یافت نشد.");
         IdentityRole.Remove(identityRole);
     }
@@ -36,5 +42,5 @@ public class Identity : EfCoreEntity<Guid>
     #endregion
 
     public void SetPassword(string password) => Password = password;
-    
+
 }

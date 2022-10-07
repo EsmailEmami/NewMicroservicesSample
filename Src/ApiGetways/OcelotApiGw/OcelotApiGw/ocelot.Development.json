@@ -12,9 +12,8 @@
       ],
       "UpstreamPathTemplate": "/Product",
       "UpstreamHttpMethod": [ "GET", "POST" ],
-      "FileCacheOptions": {
-        "TtlSeconds": 30
-      },
+      "AuthenticationProviderKey": "Bearer",
+      "“AllowedScopes”": [],
       "SwaggerKey": "catalog"
     },
     {
@@ -44,6 +43,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5010"
+    "BaseUrl": "http://localhost:8010"
   }
 }

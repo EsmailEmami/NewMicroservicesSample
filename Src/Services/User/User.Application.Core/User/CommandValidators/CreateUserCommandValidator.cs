@@ -1,6 +1,6 @@
 ﻿using User.Application.Core.User.Commands;
 
-namespace User.Application.Core.User.Validators;
+namespace User.Application.Core.User.CommandValidators;
 
 public class CreateUserCommandValidator : UserCommandValidator<CreateUserCommand, long>
 {
