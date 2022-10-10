@@ -1,5 +1,6 @@
 ﻿using Application.Extensions;
 using BuildingBlocks.CatalogService.Product;
+using FluentValidation;
 using Infrastructure.ApiVersioning;
 using Infrastructure.Consul;
 using Infrastructure.Core;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using User.Application.Core.User;
+using User.Application.Core.User.CommandValidators;
 using User.Application.Services.User;
 using User.Application.Services.User.MappingProfiles;
 using User.Infrastructure.Context;
@@ -35,6 +37,7 @@ public static class ServiceRegistration
         services.AddApiVersioning(configuration);
 
         services.AddScoped<IUserService, UserService>();
+        services.AddValidatorsFromAssembly(typeof(CreateUserCommandValidator).Assembly);
 
         return services;
     }
