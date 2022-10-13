@@ -2,7 +2,6 @@
 using Application.Security;
 using Domain.Commands;
 using Domain.Queries;
-using User.Application.Core.Identity.Query;
 using User.Application.Core.User;
 using User.Application.Core.User.Commands;
 using User.Application.Core.User.Dtos;
@@ -34,9 +33,6 @@ public class UserService : IUserService
     {
         var query = Mapping.Map<LoginUserDto, GetUserByUserNameQuery>(loginDto);
         var user = await _queryBus.Send(query);
-
-        if (user.Identiy == null)
-            user.SetIdentity(await _queryBus.Send(new GetIdentityQuery(user.IdentityId)));
 
         var passwordCheck = _passwordHasher.VerifyHashedPassword(user.Identiy.Password, loginDto.Password);
 

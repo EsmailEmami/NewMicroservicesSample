@@ -6,6 +6,6 @@ public class GetIdentityQueryValidator : IdentityQueryValidator<GetIdentityQuery
 {
     public GetIdentityQueryValidator()
     {
-        ValidateId();
+        ValidateUserId();
     }
 }

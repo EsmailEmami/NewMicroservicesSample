@@ -7,15 +7,16 @@ namespace User.Application.Services.Identity;
 public class IdentityQueryHandler : QueryHandler,
     IQueryHandler<GetIdentityQuery, Domain.Entities.Identity>
 {
-    private readonly IEfCoreRepository<Domain.Entities.Identity, Guid> _identityRepository;
+    private readonly IEfCoreRepository<Domain.Entities.User, long> _userRepository;
 
-    public IdentityQueryHandler(IEfCoreRepository<Domain.Entities.Identity, Guid> identityRepository)
+    public IdentityQueryHandler(IEfCoreRepository<Domain.Entities.User, long> userRepository)
     {
-        _identityRepository = identityRepository;
+        _userRepository = userRepository;
     }
 
-    public async Task<Domain.Entities.Identity> Handle(GetIdentityQuery request, CancellationToken cancellationToken)
+    public Task<Domain.Entities.Identity> Handle(GetIdentityQuery request, CancellationToken cancellationToken)
     {
-        return await _identityRepository.GetAsync(request.Id);
+        CheckValidation(request);
+        return Task.FromResult(_userRepository.Get(request.UserId).Identiy);
     }
 }

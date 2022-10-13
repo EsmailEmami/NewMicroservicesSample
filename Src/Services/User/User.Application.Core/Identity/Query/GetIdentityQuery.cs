@@ -5,9 +5,9 @@ using Domain.Entities;
 
 public class GetIdentityQuery : IdentityQuery<Identity>
 {
-    public GetIdentityQuery(Guid id)
+    public GetIdentityQuery(long userId)
     {
-        Id = id;
+        UserId = userId;
     }
     public override bool IsValid()
     {

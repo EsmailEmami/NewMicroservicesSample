@@ -5,10 +5,10 @@ namespace User.Application.Core.Identity.QueryValidators;
 
 public class IdentityQueryValidator<TQuery, TResponse> : AbstractValidator<TQuery> where TQuery : IdentityQuery<TResponse>
 {
-    public void ValidateId()
+    public void ValidateUserId()
     {
-        RuleFor(x => x.Id)
-            .NotNull().NotEqual(Guid.Empty)
+        RuleFor(x => x.UserId)
+            .NotNull().NotEqual(0)
             .WithMessage("لطفا شناسه را وارد کنید.");
     }
 }

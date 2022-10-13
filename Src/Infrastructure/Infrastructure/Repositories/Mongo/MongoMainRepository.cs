@@ -1,13 +1,14 @@
 ﻿using Application.Core.MongoOptions;
 using Application.Core.Repositories.Mongo;
 using Application.Extensions;
+using Domain.Core;
 using Domain.Core.Events.Mongo;
 using MongoDB.Driver;
 
 namespace Infrastructure.Repositories.Mongo;
 
 public class MongoMainRepository<TEntity, TPrimaryKey> : MongoRepository<TEntity, TPrimaryKey>
-        where TEntity : class, IMongoEntity<TPrimaryKey>
+        where TEntity : class, IMongoEntity<TPrimaryKey>, IAggregateRoot
 {
     private readonly IMongoCollection<TEntity> _collection;
 
@@ -45,7 +46,7 @@ public class MongoMainRepository<TEntity, TPrimaryKey> : MongoRepository<TEntity
 }
 
 public class MongoMainRepository<TEntity> : MongoMainRepository<TEntity, int>
-    where TEntity : class, IMongoEntity<int>
+    where TEntity : class, IMongoEntity<int>, IAggregateRoot
 {
     public MongoMainRepository(IMongoDbSettings options) : base(options)
     {

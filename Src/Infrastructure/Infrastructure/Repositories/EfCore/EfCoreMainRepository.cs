@@ -2,12 +2,13 @@
 using System.Linq.Expressions;
 using Application.Core;
 using Application.Core.Repositories.EfCore;
+using Domain.Core;
 using Domain.Core.Events.EfCore;
 
 namespace Infrastructure.Repositories.EfCore;
 
 public class EfCoreMainRepository<TEntity, TPrimaryKey> : EfCoreRepository<TEntity, TPrimaryKey>
-    where TEntity : class, IEfCoreEntity<TPrimaryKey>
+    where TEntity : class, IEfCoreEntity<TPrimaryKey>, IAggregateRoot
 {
     public virtual DbContext Context { get; }
     public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
@@ -105,7 +106,7 @@ public class EfCoreMainRepository<TEntity, TPrimaryKey> : EfCoreRepository<TEnti
 }
 
 public class EfCoreMainRepository<TEntity> : EfCoreMainRepository<TEntity, int>
-    where TEntity : class, IEfCoreEntity<int>
+    where TEntity : class, IEfCoreEntity<int>, IAggregateRoot
 {
     public EfCoreMainRepository(IUnitOfWork dbContextProvider) : base(dbContextProvider)
     {
