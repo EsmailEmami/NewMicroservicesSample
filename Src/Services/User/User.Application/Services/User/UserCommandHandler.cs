@@ -4,7 +4,8 @@ using User.Application.Core.User.Commands;
 
 namespace User.Application.Services.User;
 
-public class UserCommandHandler : CommandHandler<CreateUserCommand, long>
+public class UserCommandHandler : CommandHandler,
+    ICommandHandler<CreateUserCommand, long>
 {
     private readonly IEfCoreRepository<Domain.Entities.User, long> _userRepository;
 
@@ -13,8 +14,7 @@ public class UserCommandHandler : CommandHandler<CreateUserCommand, long>
         _userRepository = userRepository;
     }
 
-
-    public override async Task<long> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<long> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         CheckValidation(request);
 

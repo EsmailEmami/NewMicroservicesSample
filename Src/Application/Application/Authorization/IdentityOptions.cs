@@ -14,7 +14,7 @@ public class IdentityOptions
     public string Audience { get; set; }
     public bool SaveToken { get; set; } = true;
 
-    public IEnumerable<IdentityPolicy> Policies { get; set; }
+    public IEnumerable<IdentityPolicy> Policies { get; set; } = new List<IdentityPolicy>();
 }
 
 public class TokenParameters

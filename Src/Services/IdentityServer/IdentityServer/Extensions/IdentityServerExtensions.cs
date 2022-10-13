@@ -9,7 +9,6 @@ public static class IdentityServerExtensions
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiResources(Config.ApiResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
-            .AddTestUsers(Config.TestUsers)
             .AddDeveloperSigningCredential();
 
         return services;

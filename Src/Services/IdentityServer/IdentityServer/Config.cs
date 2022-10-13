@@ -39,6 +39,18 @@ public static class Config
                        new("secret".Sha256())
                    },
                    AllowedScopes = {"user_api_scope"}
+               },
+               new () {
+               RequireConsent = false,
+               ClientId = "angular_spa",
+               ClientName = "Angular SPA",
+               AllowedGrantTypes = GrantTypes.Implicit,
+               AllowedScopes = { "openid", "profile", "email", "angular_scope" },
+               RedirectUris = {"http://localhost:4200/auth-callback"},
+               PostLogoutRedirectUris = {"http://localhost:4200/"},
+               AllowedCorsOrigins = {"http://localhost:4200"},
+               AllowAccessTokensViaBrowser = true,
+               AccessTokenLifetime = 3600
                }
            };
 
@@ -46,7 +58,8 @@ public static class Config
     public static IEnumerable<ApiScope> ApiScopes =>
        new ApiScope[]
        {
-           new ("user_api_scope","user api scope")
+           new ("user_api_scope","user api scope"),
+           new ("angular_scope","user angular scope")
        };
 
 
