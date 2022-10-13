@@ -1,8 +1,9 @@
-﻿using Domain.Core.Events.EfCore;
+﻿using Domain.Core;
+using Domain.Core.Events.EfCore;
 
 namespace User.Domain.Entities;
 
-public class User : EfCoreEntity<long>
+public class User : EfCoreEntity<long>, IAggregateRoot
 {
     public string FirstName { get; }
     public string LastName { get; }

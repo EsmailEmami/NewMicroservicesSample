@@ -1,11 +1,12 @@
 ﻿using System.Linq.Expressions;
+using Domain.Core;
 using Domain.Core.Entities;
 using Domain.Exceptions;
 
 namespace Application.Core.Repositories;
 
 public abstract class Repository<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
-        where TEntity : class, IEntity<TPrimaryKey>
+        where TEntity : class, IEntity<TPrimaryKey>, IAggregateRoot
 {
     public abstract IQueryable<TEntity> GetAll();
 

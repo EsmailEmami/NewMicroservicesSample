@@ -1,9 +1,10 @@
 ﻿using System.Linq.Expressions;
+using Domain.Core;
 using Domain.Core.Entities;
 
 namespace Application.Core.Repositories;
 
-public interface IRepository<TEntity, in TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
+public interface IRepository<TEntity, in TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>, IAggregateRoot
 {
     IQueryable<TEntity> GetAll();
     bool Exists(TPrimaryKey id);
