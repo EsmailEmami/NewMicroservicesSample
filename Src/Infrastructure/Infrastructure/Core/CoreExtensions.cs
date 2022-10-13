@@ -1,9 +1,12 @@
 ﻿using System.Reflection;
 using Application.Events;
 using Application.Filters;
+using Application.Middlewares;
+using Application.PipeLines;
 using Application.Security;
 using Domain.Commands;
 using Domain.Queries;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +22,13 @@ public static class CoreExtensions
         foreach (var assembly in assemblies)
             services.AddMediatR(assembly);
 
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
+        services.AddValidatorsFromAssemblies(assemblies);
+
         services.AddControllers(opt => opt.Filters.Add<ExceptionFilter>());
+
+        services.AddTransient<ExceptionHandlingMiddleware>();
 
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddScoped<ICommandBus, CommandBus>();
@@ -34,6 +43,7 @@ public static class CoreExtensions
 
     public static IApplicationBuilder UseCore(this IApplicationBuilder app)
     {
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
         return app;
     }
 }

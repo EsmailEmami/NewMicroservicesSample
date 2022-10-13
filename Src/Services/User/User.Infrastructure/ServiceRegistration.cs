@@ -44,6 +44,7 @@ public static class ServiceRegistration
 
     public static IApplicationBuilder UseCoreRegistration(this IApplicationBuilder app)
     {
+        app.UseCore();
         app.UseSubscribeAllEvents(typeof(ProductAddedEvent));
 
         return app;

@@ -29,6 +29,7 @@
 
 	<ItemGroup>
 	  <Folder Include="ApiVersioning\" />
+	  <Folder Include="Middlewares\" />
 	</ItemGroup>
 
 </Project>
