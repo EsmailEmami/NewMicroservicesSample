@@ -1,5 +1,6 @@
 ﻿using Application.Extensions;
 using BuildingBlocks.CatalogService.Product;
+using Catalog.Application.Commands.Product;
 using Catalog.Application.Services;
 using Catalog.Infrastructure.Context;
 using Catalog.Infrastructure.Services;
@@ -29,6 +30,7 @@ public static class ServiceRegistration
         Log.Logger = LoggingExtensions.AddLogging(configuration);
 
         types = typeof(ProductAddedEvent).PrependToParamArray(types);
+        types = typeof(Validator).PrependToParamArray(types);
         services.AddConsul(configuration);
         services.AddMessageBroker(configuration);
         services.AddOutbox(configuration);
@@ -51,6 +53,7 @@ public static class ServiceRegistration
         if (loggerFactory == null)
             throw new ArgumentNullException(nameof(loggerFactory));
 
+        app.UseCore();
         app.UseSubscribeAllEvents(typeof(ProductAddedEvent));
         app.UseLogging(configuration, loggerFactory);
         app.UseConsul(lifetime);

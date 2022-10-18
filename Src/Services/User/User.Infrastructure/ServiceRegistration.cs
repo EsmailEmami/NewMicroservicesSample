@@ -37,7 +37,6 @@ public static class ServiceRegistration
         services.AddApiVersioning(configuration);
 
         services.AddScoped<IUserService, UserService>();
-        services.AddValidatorsFromAssembly(typeof(CreateUserCommandValidator).Assembly);
 
         return services;
     }

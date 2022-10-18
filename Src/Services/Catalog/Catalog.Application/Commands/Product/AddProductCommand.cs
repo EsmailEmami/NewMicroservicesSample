@@ -26,6 +26,6 @@ public class Validator : AbstractValidator<AddProductCommand>
 {
     public Validator()
     {
-        RuleFor(cmd => cmd.Product).NotNull();
+        RuleFor(cmd => cmd.Product).NotNull().WithMessage("کالا نباید خالی باشد.");
     }
 }

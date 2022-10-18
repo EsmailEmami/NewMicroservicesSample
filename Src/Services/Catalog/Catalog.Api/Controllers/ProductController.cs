@@ -7,7 +7,7 @@ namespace Catalog.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize()]
+    //[Authorize()]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -23,7 +23,7 @@ namespace Catalog.Api.Controllers
             Product product = new Product();
             product.Set("name", "category", "summery", "description", "file", 12M);
 
-            var data = _productService.AddProduct(product);
+            var data = _productService.AddProduct(null);
 
             return Ok(data);
         }

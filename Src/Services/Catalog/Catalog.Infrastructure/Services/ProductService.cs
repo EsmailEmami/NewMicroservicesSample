@@ -22,16 +22,9 @@ public class ProductService : IProductService
 
     public Guid AddProduct(Product product)
     {
-        try
-        {
-            var command = new AddProductCommand(product);
-            return _commandBus.Send(command).Result;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        //throw new ApplicationException("تست");
+        var command = new AddProductCommand(product);
+        return _commandBus.Send(command).Result;
     }
 
     public List<Product> GetAllProducts()

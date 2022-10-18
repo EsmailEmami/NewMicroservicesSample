@@ -11,8 +11,8 @@ public sealed class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior
 
     private readonly Stopwatch _timer;
 
-    private readonly ILogger _logger;
-    public PerformanceBehavior(ILogger logger)
+    private readonly ILogger<TRequest> _logger;
+    public PerformanceBehavior(ILogger<TRequest> logger)
     {
         _logger = logger;
         _timer = new Stopwatch();

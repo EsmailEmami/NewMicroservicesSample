@@ -26,7 +26,8 @@ public static class CoreExtensions
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
         services.AddValidatorsFromAssemblies(assemblies);
 
-        services.AddControllers(opt => opt.Filters.Add<ExceptionFilter>());
+        //opt => opt.Filters.Add<ExceptionFilter>()
+        services.AddControllers();
 
         services.AddTransient<ExceptionHandlingMiddleware>();
 

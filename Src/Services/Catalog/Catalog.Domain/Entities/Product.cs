@@ -1,10 +1,11 @@
 ﻿using Domain.Attributes;
+using Domain.Core;
 using Domain.Core.Events.Mongo;
 
 namespace Catalog.Domain.Entities;
 
 [BsonCollection("Products")]
-public class Product : MongoEntity<Guid>
+public class Product : MongoEntity<Guid>, IAggregateRoot
 {
     public Product()
     {
