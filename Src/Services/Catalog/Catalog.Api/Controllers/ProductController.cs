@@ -23,7 +23,7 @@ namespace Catalog.Api.Controllers
             Product product = new Product();
             product.Set("name", "category", "summery", "description", "file", 12M);
 
-            var data = _productService.AddProduct(null);
+            var data = _productService.AddProduct(product);
 
             return Ok(data);
         }
